@@ -910,19 +910,19 @@ function checkObjectCollision(){
             sheep.style.height = "18px";
             sheep.style.width = "10px";
 
-            if (player.score <= 1){
+            if (player.score === 1){
               sheep.style.top = "82px";
               sheep.style.left = "55px";
               sheep.style.zIndex = "-1";
               sheep.style.backgroundImage = "url(images/sheep-10x18.png)";
               document.querySelector("#safehouse").appendChild(sheep)
-            }else if (player.score <= 2){
+            }else if (player.score === 2){
               sheep.style.top = "82px";
               sheep.style.left = "45px";
               sheep.style.zIndex = "-1";
               sheep.style.backgroundImage = "url(images/sheep-10x18.png)";
               document.querySelector("#safehouse").appendChild(sheep)
-            }else if (player.score <= 3){
+            }else if (player.score === 3){
               sheep.style.top = "82px";
               sheep.style.left = "35px";
               sheep.style.zIndex = "-1";
