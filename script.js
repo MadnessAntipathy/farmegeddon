@@ -855,6 +855,7 @@ function checkObjectCollision(){
             obstacleArray[k].type = "deaddog";
             sound(obstacleArray[k]);
             obstacleArray[k].animalarray.movestatus = true; //if sheepdog dies, sheep will gain true movement again and has to be recaptured
+            obstacleArray[k].animalarray.targetted = false; //untags the sheep to be collected by another sheep dog if there is one
             num = obstacleArray[k].id;
             txt = num.toString();
             removeElement = document.getElementById(txt);
