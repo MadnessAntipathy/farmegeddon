@@ -14,6 +14,7 @@ function selectDifficulty(){
   text.style.color ="white";
   text.style.textAlign="center";
   text.innerText = "Select Difficulty"
+
   var easy = document.createElement("button");
   easy.type = "button";
   easy.style.textAlign = "center";
@@ -26,6 +27,7 @@ function selectDifficulty(){
   easy.addEventListener("click", setDifficulty);
   easy.addEventListener("mouseover", changeColor);
   easy.addEventListener("mouseout", changeBack);
+
   var normal = document.createElement("button");
   normal.type = "button";
   normal.style.textAlign = "center";
@@ -38,6 +40,7 @@ function selectDifficulty(){
   normal.addEventListener("click", setDifficulty);
   normal.addEventListener("mouseover", changeColor);
   normal.addEventListener("mouseout", changeBack);
+
   var farmegeddon = document.createElement("button");
   farmegeddon.type = "button";
   farmegeddon.style.textAlign = "center";
@@ -78,9 +81,9 @@ function setDifficulty(){
   document.querySelector("#difficulty").remove();
   var difficulty = event.target.id;
   if (difficulty === "easy"){
-    dropRate = 300000;
-    player.animaldeathlimit = 20;
-    player.dogspawn = 15;
+    dropRate = 500;
+    player.animaldeathlimit = 30;
+    player.dogspawn = 5;
   }
   if (difficulty === "normal"){
     dropRate = 200;
@@ -196,6 +199,7 @@ function generateOverallStats(){
   statCount.style.color = "white";
   statCount.style.zIndex = "3";
   statCount.innerText = "Your score is: Nothing so far";
+
   var carryCount = document.createElement("div");
   carryCount.setAttribute("id", "carrycounter")
   carryCount.style.height = "20px";
@@ -203,6 +207,7 @@ function generateOverallStats(){
   carryCount.style.color = "white";
   carryCount.style.zIndex = "3";
   carryCount.innerText = `You are carrying ZERO animals`;
+
   var deathCount = document.createElement("div");
   deathCount.setAttribute("id", "deathcounter")
   deathCount.style.height = "20px";
@@ -210,6 +215,7 @@ function generateOverallStats(){
   deathCount.style.color = "white";
   deathCount.style.zIndex = "3";
   deathCount.innerText = `${player.animaldeath} animals have died`;
+
   var statContainer = document.createElement("div");
   statContainer.setAttribute("id", "controls")
   statContainer.style.height="100px";
@@ -232,6 +238,7 @@ function generatePlayer(){
   var randNum = Math.floor(Math.random()*map.height);
   player.positionX = randNum;
   player.positionY = randNum;
+
   var play = document.createElement("div");
   play.id = player.id;
   play.style.position = player.position;
@@ -242,6 +249,7 @@ function generatePlayer(){
   play.style.left = randNum+"px";
   play.style.backgroundImage = "url(images/human-black-10x20.png)";
   player.active = true; //set player to active when game commence. when player.active is false, game will end
+
   var mapping = document.querySelector("#gamearea");
   obstacleArray.push(player);
   mapping.appendChild(play);
@@ -307,6 +315,7 @@ function generateSheepDog(){
     helper.style.top = randPosY+"px";
     helper.style.left = randPosX+"px";
     helper.style.backgroundImage = "url(images/sheepdog-8x15.png)";
+
     var mapping = document.querySelector("#gamearea");
     obstacleArray.push(sheepDog);
     mapping.appendChild(helper);
@@ -334,6 +343,7 @@ function generateSafeHouse(){
   obj.style.left = safeHouse.positionX+"px";
   obj.style.backgroundImage = "url(images/barn3-100x100.png)";
   obj.style.zIndex = "4"
+
   var mapping = document.querySelector("#gamearea");
   obstacleArray.push(safeHouse);
   mapping.appendChild(obj);
@@ -392,6 +402,7 @@ function generateArmageddon(){
       obj.style.top = 0+"px";
       obj.style.left = newObstacle.positionX+"px";
       obj.style.backgroundImage = "url(images/bomb2-8x17.png)";
+
       var objShadow = document.createElement("div");
       objShadow.setAttribute("id", newShadow.id);
       objShadow.style.position = newObstacle.position;
@@ -401,6 +412,7 @@ function generateArmageddon(){
       objShadow.style.top = newShadow.positionY+newObstacle.height+"px";
       objShadow.style.left = newShadow.positionX+(newObstacle.width/2)+"px";
       objShadow.style.backgroundColor = newShadow.color;
+
       var mapping = document.querySelector("#gamearea");
       mapping.appendChild(objShadow);
       mapping.appendChild(obj);
@@ -469,6 +481,7 @@ function generateCollectibles(){
       obj.style.top = collectible.positionY+"px";
       obj.style.left = collectible.positionX+"px";
       obj.style.backgroundImage = "url(images/sheep-10x18.png)";
+
       var mapping = document.querySelector("#gamearea");
       mapping.appendChild(obj);
       obstacleArray.push(collectible);
@@ -662,8 +675,8 @@ function collectAnimal(obj,gameObject){
     gameObject.animalarray.following = "dog"
     gameObject.animalarray.caughtby = gameObject;
   }
-  //if player takes the sheep, the sheepdog will look for next untargetted sheep
-  if (gameObject.animalarray.movestatus === false){
+  //if player takes the sheep or sheep has been blown up, the sheepdog will look for next untargetted sheep
+  if (gameObject.animalarray.movestatus === false || gameObject.animalarray.type === "dead"){
     console.log("dropping target")
     gameObject.busystatus = false;
   }
@@ -687,8 +700,8 @@ function depositAnimal(obj,gameObject){
       gameObject.positionY--;
     }
   }
-  //releases animal if player takes the sheep
-  if (gameObject.releasecatch === true || gameObject.animalarray.following === "player"){
+  //releases animal if player takes the sheep or if it deposits the sheep in the barn
+  if (gameObject.releasecatch === true || gameObject.animalarray.following === "player" || gameObject.animalarray.type === "dead"){
     console.log("releasing")
     gameObject.engagestatus = false;
     gameObject.busystatus = false;
@@ -835,6 +848,7 @@ function checkObjectCollision(){
               player.collecteditems-=1;
               document.querySelector("#carrycounter").innerText = `You are currently carrying ${player.collecteditems} animals`;
             }
+            obstacleArray[k].caughtby.busystatus = false;
             obstacleArray[k].type = "dead";
             sound(obstacleArray[k]); //plays sound of dead animal
             var num = obstacleArray[k].id;
