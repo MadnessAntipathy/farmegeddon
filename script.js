@@ -333,14 +333,14 @@ function generateSafeHouse(){
     positionY: 400,
     color: "rgba(255,255,0,0.5)",
   }
-  var obj = document.createElement("img");
+  var obj = document.createElement("div");
   obj.setAttribute("id", safeHouse.id);
   obj.style.position = safeHouse.position;
   obj.style.height = safeHouse.height+"px";
   obj.style.width = safeHouse.width+"px";
   obj.style.top = safeHouse.positionY+"px";
   obj.style.left = safeHouse.positionX+"px";
-  obj.src = "images/barn3-100x100.png";
+  obj.style.backgroundImage = "url(images/barn3-100x100.png)";
   obj.style.zIndex = "4"
 
   var mapping = document.querySelector("#gamearea");
@@ -850,7 +850,7 @@ function checkObjectCollision(){
       for (var k = 0; k < obstacleArray.length; k++){
         if ((obstacleArray[i].positionX+obstacleArray[i].width > obstacleArray[k].positionX) && (obstacleArray[i].positionX < obstacleArray[k].positionX+obstacleArray[k].width) && (obstacleArray[i].positionY+obstacleArray[i].height > obstacleArray[k].positionY) && (obstacleArray[i].positionY < obstacleArray[k].positionY+obstacleArray[k].height)){
           if (obstacleArray[k].type === "good"){
-            if (obstacleArray[k].movestatus === false){
+            if (obstacleArray[k].movestatus === false && obstacleArray[k].following === "player"){
               player.collecteditems-=1;
               document.querySelector("#carrycounter").innerText = `You are currently carrying ${player.collecteditems} animals`;
             }
@@ -911,8 +911,7 @@ function checkObjectCollision(){
             }
           }
           //when animals reach safehouse remove them and add to score
-          if (obstacleArray[j].type === "safe"){
-            if (obstacleArray[i].type === "good" && obstacleArray[i].movestatus === false){
+          if (obstacleArray[j].type === "safe" && obstacleArray[i].type === "good" && obstacleArray[i].movestatus === false){
               obstacleArray[i].caughtby.releasecatch = true;
               if (obstacleArray[i].following === "player"){
                 player.collecteditems--;
@@ -923,7 +922,6 @@ function checkObjectCollision(){
               removeElement.remove();
               obstacleArray.splice(i,1);
               player.score ++;
-            }
             document.querySelector("#scorecounter").innerText = `Your score is: ${player.score}`;
             document.querySelector("#carrycounter").innerText = `You are currently carrying ${player.collecteditems} animals`;
             var sheep = document.createElement("div");
@@ -934,20 +932,20 @@ function checkObjectCollision(){
             if (player.score === 1){
               sheep.style.top = "82px";
               sheep.style.left = "55px";
-              sheep.style.zIndex = "-1";
-              sheep.src = "images/sheep-10x18.png";
+              sheep.style.zIndex = "1";
+              sheep.style.backgroundImage = "url(images/sheep-10x18.png)";
               document.querySelector("#safehouse").appendChild(sheep)
             }else if (player.score === 2){
               sheep.style.top = "82px";
               sheep.style.left = "45px";
-              sheep.style.zIndex = "-1";
-              sheep.src = "images/sheep-10x18.png";
+              sheep.style.zIndex = "1";
+              sheep.style.backgroundImage = "url(images/sheep-10x18.png)";
               document.querySelector("#safehouse").appendChild(sheep)
             }else if (player.score === 3){
               sheep.style.top = "82px";
               sheep.style.left = "35px";
-              sheep.style.zIndex = "-1";
-              sheep.src = "images/sheep-10x18.png";
+              sheep.style.zIndex = "1";
+              sheep.style.backgroundImage = "url(images/sheep-10x18.png)";
               document.querySelector("#safehouse").appendChild(sheep)
             }
             break;
