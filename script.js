@@ -1,13 +1,3 @@
-
-
-window.addEventListener("load", function (){
-    init();
-    console.log("Initializing")
-});
-function init(){
-  startGame();
-}
-
 function startGame(){
   document.querySelector("#startbutton").remove()
   document.querySelector("#introtext").remove()
@@ -1049,4 +1039,9 @@ window.addEventListener("keydown", function(){
   if ([32,37,38,39,40].indexOf(event.keyCode) >-1){
     event.preventDefault();
   }
+});
+
+window.addEventListener("load", function (){
+
+    console.log("Initializing")
 });
