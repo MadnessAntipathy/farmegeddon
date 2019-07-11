@@ -1,7 +1,7 @@
 
 
-window.addEventListener("load", function (){
-    console.log("loaded")
+window.addEventListener("ready", function (){
+    console.log("ready")
 });
 
 function startGame(){
