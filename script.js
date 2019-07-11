@@ -108,7 +108,7 @@ function setDifficulty(){
     checkObjectCollision();
     if (globalCounter % dropRate === 0 && globalCounter != 0){
       generateMultigeddon();
-      generateCollectibles();
+      generateSheepgeddon();
     }
     if (player.score % player.dogspawn === 0 && player.score != 0 && player.trigger === 0){
       generateSheepDog();
@@ -419,6 +419,13 @@ function generateArmageddon(){
       obstacleArray.push(newObstacle);
       obstacleArray.push(newShadow);
     }
+}
+//generate many sheep at once
+function generateSheepgeddon(){
+  var randNum = Math.floor(Math.random()*5)+5;
+  for (var i = 0; i < randNum; i++){
+    generateCollectibles();
+  }
 }
 //generate collectible items
 function generateCollectibles(){
