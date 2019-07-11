@@ -1,8 +1,12 @@
 
 
-window.addEventListener("ready", function (){
-    console.log("ready")
+window.addEventListener("load", function (){
+    init();
+    console.log("Initializing")
 });
+function init(){
+  startGame();
+}
 
 function startGame(){
   document.querySelector("#startbutton").remove()
