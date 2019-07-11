@@ -1,6 +1,7 @@
-document.addEventListener("DOMContentLoaded", function(){
-  console.log("DOM Content Loaded!")
-});
+window.addEventListener("load", function(){
+  console.log("Content Loaded!")
+  });
+
 //define global variable
 function startGame(){
   document.querySelector("#startbutton").remove()
