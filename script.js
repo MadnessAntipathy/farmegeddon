@@ -110,7 +110,10 @@ function setDifficulty(){
       generateSheepgeddon();
     }
     if (player.score % player.dogspawn === 0 && player.score != 0 && player.trigger === 0){
-      generateSheepDog();
+      if (player.helperlimit < 6){
+        generateSheepDog();
+        player.helperlimit++;
+      }
     }
     if (player.score % player.dogspawn === 0){
       player.trigger = 1;
@@ -127,6 +130,7 @@ function restartGame(){
   player.collecteditems = 0;
   player.animaldeath = 0;
   player.score = 0;
+  player.helperlimit = 0;
   obstacleArray = [];
   selectDifficulty()
 }
@@ -149,6 +153,7 @@ var player = {
   width: 10,
   animaldeath: 0,
   animaldeathlimit: 10,
+  helperlimit: 0,
   color: "black",
   collecteditems: 0,
   dogspawn: null,
@@ -330,7 +335,7 @@ function generateSafeHouse(){
     height: 100,
     width: 100,
     positionX: 350,
-    positionY: 400,
+    positionY: 200,
     color: "rgba(255,255,0,0.5)",
   }
   var obj = document.createElement("div");
@@ -397,7 +402,7 @@ function generateArmageddon(){
       obj.style.position = newObstacle.position;
       obj.style.height = newObstacle.height+"px";
       obj.style.width = newObstacle.width+"px";
-      obj.style.zIndex = "2";
+      obj.style.zIndex = "5";
       obj.style.top = 0+"px";
       obj.style.left = newObstacle.positionX+"px";
       obj.src = "images/bomb2-8x17.png";
@@ -495,7 +500,7 @@ function generateCollectibles(){
 }
 //have the bombs drop from top of the map to their starting positions
 function dropping(obj,newObstacle){
-  if (newObstacle.positionY === newObstacle.dropY ){
+  if (newObstacle.positionY >= newObstacle.dropY ){
     newObstacle.livestatus = true;
     sound(newObstacle);
     exploding(obj,newObstacle);
@@ -873,6 +878,7 @@ function checkObjectCollision(){
           if(obstacleArray[k].type === "dog"){
             console.log("woof!")
             obstacleArray[k].type = "deaddog";
+            player.helperlimit--;
             sound(obstacleArray[k]);
             obstacleArray[k].animalarray.movestatus = true; //if sheepdog dies, sheep will gain true movement again and has to be recaptured
             obstacleArray[k].animalarray.targetted = false; //untags the sheep to be collected by another sheep dog if there is one
