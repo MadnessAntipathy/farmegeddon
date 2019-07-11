@@ -1,13 +1,17 @@
-window.addEventListener("load", function(){
-  console.log("Content Loaded!")
-  });
 
-//define global variable
+
+window.addEventListener("load", function (){
+    console.log("loaded")
+});
+
 function startGame(){
   document.querySelector("#startbutton").remove()
   document.querySelector("#introtext").remove()
   selectDifficulty()
 }
+
+//define global variable
+
 function selectDifficulty(){
   var difficulty = document.createElement("div");
   difficulty.setAttribute("id","difficulty");
