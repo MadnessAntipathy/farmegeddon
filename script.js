@@ -238,7 +238,7 @@ function generatePlayer(){
   player.positionX = randNum;
   player.positionY = randNum;
 
-  var play = document.createElement("div");
+  var play = document.createElement("img");
   play.id = player.id;
   play.style.position = player.position;
   play.style.zIndex = "1";
@@ -246,7 +246,7 @@ function generatePlayer(){
   play.style.width = player.width+"px";
   play.style.top = randNum+"px";
   play.style.left = randNum+"px";
-  play.style.backgroundImage = "url(images/human-black-10x20.png)";
+  play.src = "images/human-black-10x20.png";
   player.active = true; //set player to active when game commence. when player.active is false, game will end
 
   var mapping = document.querySelector("#gamearea");
@@ -306,14 +306,14 @@ function generateSheepDog(){
   if (randPosX%10!=0 || randPosY%10!=0 || randPosX+sheepDog.width>map.width || randPosY+sheepDog.height>map.height || ((randPosX+sheepDog.width>safeHouse.positionX) && (randPosX<safeHouse.positionX+safeHouse.width) && (randPosY+sheepDog.height>safeHouse.positionY) && (randPosY<safeHouse.positionY+safeHouse.height))){
       generateSheepDog();
   }else {
-    var helper = document.createElement("div");
+    var helper = document.createElement("img");
     helper.id = sheepDog.id;
     helper.style.position = sheepDog.position;
     helper.style.height = sheepDog.height+"px";
     helper.style.width = sheepDog.width+"px";
     helper.style.top = randPosY+"px";
     helper.style.left = randPosX+"px";
-    helper.style.backgroundImage = "url(images/sheepdog-8x15.png)";
+    helper.src = "images/sheepdog-8x15.png";
 
     var mapping = document.querySelector("#gamearea");
     obstacleArray.push(sheepDog);
@@ -333,14 +333,14 @@ function generateSafeHouse(){
     positionY: 400,
     color: "rgba(255,255,0,0.5)",
   }
-  var obj = document.createElement("div");
+  var obj = document.createElement("img");
   obj.setAttribute("id", safeHouse.id);
   obj.style.position = safeHouse.position;
   obj.style.height = safeHouse.height+"px";
   obj.style.width = safeHouse.width+"px";
   obj.style.top = safeHouse.positionY+"px";
   obj.style.left = safeHouse.positionX+"px";
-  obj.style.backgroundImage = "url(images/barn3-100x100.png)";
+  obj.src = "images/barn3-100x100.png";
   obj.style.zIndex = "4"
 
   var mapping = document.querySelector("#gamearea");
@@ -391,7 +391,7 @@ function generateArmageddon(){
   if (randPosX%10!=0 || randPosY%10!=0 || randPosX+newObstacle.width>map.width || randPosY+newObstacle.height>map.height || ((randPosX+newObstacle.width>safeHouse.positionX) && (randPosX<safeHouse.positionX+safeHouse.width) && (randPosY+newObstacle.height>safeHouse.positionY) && (randPosY<safeHouse.positionY+safeHouse.height))){
       generateArmageddon();
     }else{
-      var obj = document.createElement("div");
+      var obj = document.createElement("img");
       obj.setAttribute("class",newObstacle.class);
       obj.setAttribute("id", newObstacle.id);
       obj.style.position = newObstacle.position;
@@ -400,9 +400,9 @@ function generateArmageddon(){
       obj.style.zIndex = "2";
       obj.style.top = 0+"px";
       obj.style.left = newObstacle.positionX+"px";
-      obj.style.backgroundImage = "url(images/bomb2-8x17.png)";
+      obj.src = "images/bomb2-8x17.png";
 
-      var objShadow = document.createElement("div");
+      var objShadow = document.createElement("img");
       objShadow.setAttribute("id", newShadow.id);
       objShadow.style.position = newObstacle.position;
       objShadow.style.height = newShadow.height+"px";
@@ -478,7 +478,7 @@ function generateCollectibles(){
   if (randPosX%10!=0 || randPosY%10!=0 || randPosX+collectible.width>map.width || randPosY+collectible.height>map.height||((randPosX+collectible.width>safeHouse.positionX) && (randPosX<safeHouse.positionX+safeHouse.width) && (randPosY+collectible.height>safeHouse.positionY) && (randPosY<safeHouse.positionY+safeHouse.height))){
       generateCollectibles();
     }else{
-      var obj = document.createElement("div");
+      var obj = document.createElement("img");
       obj.setAttribute("class",collectible.class);
       obj.setAttribute("id", collectible.id);
       obj.style.position = collectible.position;
@@ -486,7 +486,7 @@ function generateCollectibles(){
       obj.style.width = collectible.width+"px";
       obj.style.top = collectible.positionY+"px";
       obj.style.left = collectible.positionX+"px";
-      obj.style.backgroundImage = "url(images/sheep-10x18.png)";
+      obj.src = "images/sheep-10x18.png";
 
       var mapping = document.querySelector("#gamearea");
       mapping.appendChild(obj);
@@ -507,7 +507,7 @@ function dropping(obj,newObstacle){
 function exploding(obj, gameObject){
   gameObject.explodestatus = true;
   var randNum = Math.floor(Math.random()*25)+5;
-  obj.style.backgroundImage="url(images/explode-15x20.png)"
+  obj.src="images/explode-15x20.png"
   obj.style.backgroundSize="cover";
   obj.style.borderRadius="25";
   obj.style.zIndex="2";
@@ -523,7 +523,7 @@ function exploding(obj, gameObject){
   if (gameObject.counter >= randNum){
     gameObject.explodestatus = false;
     setTimeout(removeDebris,1000,obj, gameObject)
-    obj.style.backgroundImage="url(images/smoke-15x20.png)"
+    obj.src="images/smoke-15x20.png"
     obj.style.backgroundSize="cover";
     obj.style.borderRadius="25";
     obj.style.zIndex="2";
@@ -677,7 +677,7 @@ function collectAnimal(obj,gameObject){
     gameObject.animalarray.movestatus = false;
     var num = gameObject.animalarray.id;
     var txt = num.toString();
-    document.getElementById(txt).style.backgroundImage = "url(images/sheep-10x18-highlight.png)";
+    document.getElementById(txt).src = "images/sheep-10x18-highlight.png";
     gameObject.animalarray.following = "dog"
     gameObject.animalarray.caughtby = gameObject;
   }
@@ -828,7 +828,7 @@ function checkObjectCollision(){
         obstacleArray[i].movestatus = false;
         num = obstacleArray[i].id;
         txt = num.toString();
-        document.getElementById(txt).style.backgroundImage = "url(images/sheep-10x18-highlight.png)";
+        document.getElementById(txt).src = "images/sheep-10x18-highlight.png";
         obstacleArray[i].following = "player"; //sheep will follow player
         player.collecteditems +=1;
         var carry = document.querySelector("#carrycounter")
@@ -837,7 +837,7 @@ function checkObjectCollision(){
         sound(obstacleArray[i])
         num = obstacleArray[i].id;
         txt = num.toString();
-        document.getElementById(txt).style.backgroundImage = "url(images/sheepdog-8x15-highlight.png)";;
+        document.getElementById(txt).src = "images/sheepdog-8x15-highlight.png";
         obstacleArray[i].movestatus = false;
       }else if (obstacleArray[i].type === "boom" && obstacleArray[i].explodestatus===true){
         player.active = false;
@@ -935,19 +935,19 @@ function checkObjectCollision(){
               sheep.style.top = "82px";
               sheep.style.left = "55px";
               sheep.style.zIndex = "-1";
-              sheep.style.backgroundImage = "url(images/sheep-10x18.png)";
+              sheep.src = "images/sheep-10x18.png";
               document.querySelector("#safehouse").appendChild(sheep)
             }else if (player.score === 2){
               sheep.style.top = "82px";
               sheep.style.left = "45px";
               sheep.style.zIndex = "-1";
-              sheep.style.backgroundImage = "url(images/sheep-10x18.png)";
+              sheep.src = "images/sheep-10x18.png";
               document.querySelector("#safehouse").appendChild(sheep)
             }else if (player.score === 3){
               sheep.style.top = "82px";
               sheep.style.left = "35px";
               sheep.style.zIndex = "-1";
-              sheep.style.backgroundImage = "url(images/sheep-10x18.png)";
+              sheep.src = "images/sheep-10x18.png";
               document.querySelector("#safehouse").appendChild(sheep)
             }
             break;
