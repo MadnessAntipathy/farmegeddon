@@ -80,17 +80,20 @@ function setDifficulty(){
   document.querySelector("#difficulty").remove();
   var difficulty = event.target.id;
   if (difficulty === "easy"){
-    dropRate = 500;
+    sheepDropRate = 500;
+    bombDropRate = 200;
     player.animaldeathlimit = 30;
     player.dogspawn = 5;
   }
   if (difficulty === "normal"){
-    dropRate = 200;
+    sheepDropRate = 300;
+    bombDropRate = 100;
     player.animaldeathlimit = 15;
     player.dogspawn = 20;
   }
   if (difficulty === "farmegeddon"){
-    dropRate = 100;
+    sheepDropRate = 200;
+    bombDropRate = 50;
     player.animaldeathlimit = 10;
     player.dogspawn = 30;
   }
@@ -100,17 +103,20 @@ function setDifficulty(){
   generateOverallStats()
   generateSafeHouse()
   generatePlayer()
+
   //checks game state every 10ms - the global clock
   stopGame = setInterval(function(){
     move();
     updateObjectMove();
     checkObjectCollision();
-    if (globalCounter % dropRate === 0 && globalCounter != 0){
-      generateMultigeddon();
+    if (globalCounter % sheepDropRate === 0 && globalCounter != 0 && player.sheepcount <= 20){
       generateSheepgeddon();
     }
+    if (globalCounter % bombDropRate === 0 && globalCounter != 0){
+      generateArmageddon();
+    }
     if (player.score % player.dogspawn === 0 && player.score != 0 && player.trigger === 0){
-      if (player.helperlimit < 6){
+      if (player.helperlimit < 3){
         generateSheepDog();
         player.helperlimit++;
       }
@@ -129,6 +135,7 @@ function restartGame(){
   document.querySelector("#losecontainer").remove()
   player.collecteditems = 0;
   player.animaldeath = 0;
+  player.sheepcount = 0;
   player.score = 0;
   player.helperlimit = 0;
   obstacleArray = [];
@@ -139,9 +146,10 @@ var obstacleArray = [];
 var safeHouse = null;
 var stopGame;
 var globalCounter = 0;
+var sheepDropRate;
+var bombDropRate;
 //define player variable
 var player = {
-  active: false, //whether player is generated in game
   lose: false,
   movestatus: true, //whether player can move
   id: "player",
@@ -153,6 +161,7 @@ var player = {
   width: 10,
   animaldeath: 0,
   animaldeathlimit: 10,
+  sheepcount: 0,
   helperlimit: 0,
   color: "black",
   collecteditems: 0,
@@ -252,7 +261,6 @@ function generatePlayer(){
   play.style.top = randNum+"px";
   play.style.left = randNum+"px";
   play.src = "images/human-black-10x20.png";
-  player.active = true; //set player to active when game commence. when player.active is false, game will end
 
   var mapping = document.querySelector("#gamearea");
   obstacleArray.push(player);
@@ -353,12 +361,6 @@ function generateSafeHouse(){
   mapping.appendChild(obj);
 }
 //generate many bombs on map
-function generateMultigeddon(){
-  var randNum = Math.floor(Math.random()*15)+5;
-  for (var i = 0; i < randNum; i++){
-    generateArmageddon();
-  }
-}
 function generateArmageddon(){
   var randId = Math.floor(Math.random()*100000)
   var randPosX = Math.floor(Math.random()*map.width);
@@ -494,6 +496,7 @@ function generateCollectibles(){
       obj.src = "images/sheep-10x18.png";
 
       var mapping = document.querySelector("#gamearea");
+      player.sheepcount++;
       mapping.appendChild(obj);
       obstacleArray.push(collectible);
     }
@@ -688,7 +691,6 @@ function collectAnimal(obj,gameObject){
   }
   //if player takes the sheep or sheep has been blown up, the sheepdog will look for next untargetted sheep
   if (gameObject.animalarray.movestatus === false || gameObject.animalarray.type === "dead"){
-    console.log("dropping target")
     gameObject.busystatus = false;
   }
 }
@@ -713,7 +715,6 @@ function depositAnimal(obj,gameObject){
   }
   //releases animal if player takes the sheep or if it deposits the sheep in the barn
   if (gameObject.releasecatch === true || gameObject.animalarray.following === "player" || gameObject.animalarray.type === "dead"){
-    console.log("releasing")
     gameObject.engagestatus = false;
     gameObject.busystatus = false;
     gameObject.animalarray = [];
@@ -753,7 +754,7 @@ document.addEventListener("keyup", function (){
   }
 });
 function move(){
-  if (player.active === true){
+
     if (left){
       player.left();
     }
@@ -766,11 +767,9 @@ function move(){
     if (down){
       player.down();
     }
-  }
 }
 // function to update objects as they move this controls the behavior of the objects
 function updateObjectMove(){
-  if (player.active === true){
     for (var i = 0; i < obstacleArray.length; i++){
       var num = obstacleArray[i].id;
       var txt = num.toString();
@@ -802,7 +801,6 @@ function updateObjectMove(){
         shadowForm(obj,obstacleArray[i]);
       }
     }
-  }
 }
 //function to check for collision between objects and player and if player is out of map boundary
 function checkObjectCollision(){
@@ -845,8 +843,8 @@ function checkObjectCollision(){
         document.getElementById(txt).src = "images/sheepdog-8x15-highlight.png";
         obstacleArray[i].movestatus = false;
       }else if (obstacleArray[i].type === "boom" && obstacleArray[i].explodestatus===true){
-        player.active = false;
         player.lose = true;
+        player.animaldeath = 0;
         checkLoseState();
       }
     }
@@ -859,6 +857,7 @@ function checkObjectCollision(){
               player.collecteditems-=1;
               document.querySelector("#carrycounter").innerText = `You are currently carrying ${player.collecteditems} animals`;
             }
+            player.sheepcount--;
             obstacleArray[k].caughtby.busystatus = false;
             obstacleArray[k].type = "dead";
             sound(obstacleArray[k]); //plays sound of dead animal
@@ -876,7 +875,6 @@ function checkObjectCollision(){
             break;
           }
           if(obstacleArray[k].type === "dog"){
-            console.log("woof!")
             obstacleArray[k].type = "deaddog";
             player.helperlimit--;
             sound(obstacleArray[k]);
@@ -922,6 +920,7 @@ function checkObjectCollision(){
               if (obstacleArray[i].following === "player"){
                 player.collecteditems--;
               }
+              player.sheepcount--;
               var num = obstacleArray[i].id;
               var txt = num.toString();
               var removeElement = document.getElementById(txt);
