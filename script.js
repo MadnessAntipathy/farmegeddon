@@ -986,7 +986,7 @@ function checkLoseState(){
     if (player.lose === true){
       lose.innerText = "AHHHHH YOU DIED!!! Try again?";
     }else{
-      lose.innerText = `${player.animaldeathlimit} animals died!!! Try again?`;
+      lose.innerText = `${player.animaldeath} animals died!!! Try again?`;
     }
     if (player.score === 0){
       stats.innerText = `You saved: ZERO animals! For shame!`
