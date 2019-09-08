@@ -844,7 +844,7 @@ function checkObjectCollision(){
         obstacleArray[i].movestatus = false;
       }else if (obstacleArray[i].type === "boom" && obstacleArray[i].explodestatus===true){
         player.lose = true;
-        player.animaldeath = 0;
+        // player.animaldeath = 0;
         checkLoseState();
       }
     }
